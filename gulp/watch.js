@@ -5,6 +5,8 @@ const Gulp = require('gulp');
 
 Gulp.task('watch', () => {
 
-    global.isWatching = true;
+    Gulp.watch('./img/**/*.*', ['assets']);
     Gulp.watch('./less/**/*.less', ['less']);
+    Gulp.watch('./js/**/*.js', ['scripts']);
+
 });
