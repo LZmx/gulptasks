@@ -1,4 +1,4 @@
-# Project Title
+# Gulp tasks
 
 Base gulp task to quickstart project setup
 
