@@ -22,10 +22,12 @@ Gulp.task('scripts', () => {
             './node_modules/bootstrap/dist/js/bootstrap.min.js'
         ],
         dest: './build/js',
+        check: false,
         outputName: 'vendor.js'
     }, {
         entries: './js/app.js',
         dest: './build/js',
+        check: true,
         outputName: 'app.js'
     }];
 
@@ -33,16 +35,17 @@ Gulp.task('scripts', () => {
 
         return Gulp.src(bundleConfig.entries)
             .pipe(Newer(Path.join(bundleConfig.dest, bundleConfig.outputName)))
-            .pipe(GulpIf(bundleConfig.outputName == 'app.js', Jshint()))
+            .pipe(Jshint())
+            .pipe(GulpIf(bundleConfig.check, Jshint.reporter('default')))
             .pipe(Concat(bundleConfig.outputName))
-            .pipe(GulpIf(Args.env == 'prod' && bundleConfig.outputName == 'app.js', Uglify()))
+            .pipe(GulpIf(Args.env == 'prod' && bundleConfig.check, Uglify()))
             .pipe(Rev())
             .pipe(Gulp.dest(bundleConfig.dest))
             .pipe(Rev.manifest())
             .pipe(Gulp.dest(bundleConfig.dest))
             .pipe(GulpIf(Args.env != 'prod', Notify({
                 'title': 'Scripts',
-                'message': 'Build Complete'
+                'message': 'Build '+bundleConfig.outputName+' Complete'
             })));
     });
 });
